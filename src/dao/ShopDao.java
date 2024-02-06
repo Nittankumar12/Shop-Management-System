@@ -72,10 +72,45 @@ public void addSweets() throws SQLException {
 
 public void checkExpenses() throws  SQLException{
 
-}
+    String query = "select * from expenses";
+    PreparedStatement preparedStatement = this.connection.prepareStatement(query);
+    ResultSet resultSet = preparedStatement.executeQuery(query);
+    while(resultSet.next()){
+        System.out.println(resultSet.getInt("expense_id") +" "+resultSet.getInt("sweet_id")  + " " + resultSet.getString("sweet_name") + " " + resultSet.getInt("sweet_quantity") + " " + resultSet.getInt("Total"));
+    }
+    }
 
 public void updateSweets() throws  SQLException{
-
 }
+public void addCustomer() throws SQLException {
+    System.out.println("Please enter customer details: ");
+    System.out.println("Enter customer name: ");
+    String cust_name = scn.next();
+    System.out.println("Enter customer contact: ");
+    String cust_contact = scn.next();
+    System.out.println("Enter customer spendings: ");
+    int cust_spendings = scn.nextInt();
+    String query = "insert into customer(c_name,c_contact,c_spend) values(?,?,?)";
+    PreparedStatement preparedStatement  = this.connection.prepareStatement(query);
+    preparedStatement.setString(1,cust_name);
+    preparedStatement.setString(2,cust_contact);
+    preparedStatement.setInt(3,cust_spendings);
+    int isWorked = preparedStatement.executeUpdate();
+    if(isWorked > 0){
+        System.out.println("Customer data entered successfully");
+    }else{
+        System.out.println("Not able to insert customer data ");
+    }
+}
+
+public void checkCustomers() throws SQLException{
+    String query = "Select * from customer";
+    PreparedStatement preparedStatement = this.connection.prepareStatement(query);
+    ResultSet resultSet = preparedStatement.executeQuery(query);
+    while(resultSet.next()){
+        System.out.println(resultSet.getInt("c_id") +" "+resultSet.getString("c_name")  + " " + resultSet.getString("c_contact") + " " + resultSet.getInt("c_spend"));
+
+    }
+    }
 
 }
