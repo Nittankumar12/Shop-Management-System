@@ -45,17 +45,18 @@ public class Main {
 //                        addExpenses();
                 break;
             case 7:
-//                        addCustomer();
+                shopDao.addCustomer();
                 break;
             case 8:
-//                        checkCustomers();
-                            break;
+                shopDao.checkCustomers();
+                break;
             case 9:
                 shopDao.checkExpenses();
                 break;
             case 10:
                 System.out.println("Thanks");
-                return;
+                System.exit(0);
+//                return;
             default:
                 System.out.println("Wrong Choice");
         }
@@ -77,7 +78,7 @@ public class Main {
             case 2:
                 System.out.println();
                 System.out.println("Please Enter your login id and password");
-                if(shopU.LogInStaff()){
+                while(shopU.LogInStaff()){
                     shopMain();
                 }
                 while(!shopU.LogInStaff()){
