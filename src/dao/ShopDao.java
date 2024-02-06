@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import  java.util.*;
 import Connection.JDBC;
+import com.mysql.cj.protocol.Resultset;
 import model.ShopBean;
 
 public class ShopDao {
@@ -81,6 +82,89 @@ public void checkExpenses() throws  SQLException{
     }
 
 public void updateSweets() throws  SQLException{
+    System.out.println("Updating sweets' data");
+    System.out.println("Enter the sweet id: ");
+    int sid = scn.nextInt();
+    System.out.println("Enter the sweet name: ");
+    String s_name = scn.next();
+    String query1 = "select * from sweets where s_id = ?";
+    PreparedStatement ps = this.connection.prepareStatement(query1);
+    ps.setInt(1,sid);
+    ResultSet resultset = ps.executeQuery();
+    if(resultset.next()){
+        int prev_q = resultset.getInt("s_quantity");
+        int prev_c = resultset.getInt("s_cost");
+        System.out.println("Previous quantity is: " + prev_q + " and cost is: " + prev_c);
+        System.out.println("updated quantity is: ");
+        int new_q = scn.nextInt();
+
+        System.out.println("Updated cost: ");
+        int new_c = scn.nextInt();
+
+        String query = "update sweets set s_quantity = ? , s_cost = ? where s_id = ? ";
+
+        PreparedStatement preparedStatement = this.connection.prepareStatement(query);
+        preparedStatement.setInt(1,new_q);
+        preparedStatement.setInt(2,new_c);
+        preparedStatement.setInt(3,sid);
+        int isWorked = preparedStatement.executeUpdate();
+        if(isWorked > 0){
+            System.out.println("Data updated successfully!!");
+            System.out.println("Now available sweets are: ");
+            checkSweets();
+        }else{
+            System.out.println("Unable to update the data");
+        }
+
+        String query2 = "insert into expenses(sweet_id,sweet_name,sweet_quantity,Total) values (?,?,?,?)";
+        PreparedStatement prep= this.connection.prepareStatement(query2);
+        prep.setInt(1,sid);
+        prep.setString(2,s_name);
+        int curr_q = (new_q-prev_q);
+        prep.setInt(3,curr_q);
+        int total_e = curr_q * new_c;
+        prep.setInt(4,total_e);
+        int worked = prep.executeUpdate();
+        if(worked > 0){
+            System.out.println("Expenses of sweet" + s_name + " added in expenses");
+        }else{
+            System.out.println("Not able to add in the expenses");
+        }
+
+    }
+
+}
+public void addExpenses() throws SQLException{
+    String query2 = "insert into expenses(sweet_id,sweet_name,sweet_quantity,Total) values (?,?,?,?)";
+    PreparedStatement ps = this.connection.prepareStatement(query2);
+    System.out.println("Enter the expenses details: ");
+    System.out.println("Enter the sweet id: ");
+    int s_id = scn.nextInt();
+    System.out.println("Enter the sweet name: ");
+    String s_name = scn.next();
+    System.out.println("Enter the sweet quantity: ");
+    int s_quantity = scn.nextInt();
+    System.out.println("Enter the sweet cost: ");
+    int s_cost = scn.nextInt();
+    ps.setInt(1,s_id);
+    ps.setString(2,s_name);
+    ps.setInt(3,s_quantity);
+    int total_e = s_cost * s_quantity;
+    ps.setInt(4,total_e);
+    int worked = ps.executeUpdate();
+    if(worked > 0){
+        System.out.println("Expenses of sweet" + s_name + " added in expenses");
+    }else{
+        System.out.println("Not able to add in the expenses");
+    }
+}
+public void checkSweets() throws SQLException{
+    String query = "Select * from sweets";
+    PreparedStatement preparedStatement = this.connection.prepareStatement(query);
+    ResultSet resultSet = preparedStatement.executeQuery();
+    while(resultSet.next()){
+        System.out.println(resultSet.getInt("s_id") +" "+resultSet.getString("s_name")  + " " + resultSet.getInt("s_quantity") + " " + resultSet.getInt("s_cost"));
+    }
 }
 public void addCustomer() throws SQLException {
     System.out.println("Please enter customer details: ");
