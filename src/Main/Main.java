@@ -15,7 +15,7 @@ public class Main {
     public static void shopMain() throws SQLException {
         System.out.println("Choose:\n1.Add Sweets" +
                 "\n2.Update Sweets Data\n" +
-                "3.Check Earnings\n" +
+                "3.Check Sweets\n" +
                 "4.Check profit\n" +
                 "5.Check Orders\n" +
                 "6.Add Expenses\n" +
@@ -33,7 +33,7 @@ public class Main {
                 shopDao.updateSweets();
                 break;
             case 3:
-//                        checkEarnings();
+                shopDao.checkSweets();
                 break;
             case 4:
 //                        checkProfit();
@@ -42,7 +42,7 @@ public class Main {
 //                        checkOrders();
                 break;
             case 6:
-//                        addExpenses();
+                shopDao.addExpenses();
                 break;
             case 7:
                 shopDao.addCustomer();
