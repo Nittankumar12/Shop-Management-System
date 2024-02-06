@@ -1,7 +1,9 @@
 package Main;
 
+import dao.ShopDao;
 import usecase.ShopUseCase;
 
+import java.sql.SQLException;
 import java.sql.SQLOutput;
 import java.util.*;
 public class Main {
@@ -10,7 +12,7 @@ public class Main {
     public static void customerMain(){
 
     }
-    public static void shopMain(){
+    public static void shopMain() throws SQLException {
         System.out.println("Choose:\n1.Add Sweets" +
                 "\n2.Update Sweets Data\n" +
                 "3.Check Earnings\n" +
@@ -22,12 +24,13 @@ public class Main {
                 "9.Check Expenses\n" +
                 "10. Exit");
         int ch = scn.nextInt();
+        ShopDao shopDao = new ShopDao();
         switch (ch){
             case 1:
-//                        addSweets();
+                shopDao.addSweets();
                 break;
             case 2:
-//                        updateSweetsData();
+                shopDao.updateSweets();
                 break;
             case 3:
 //                        checkEarnings();
@@ -48,7 +51,7 @@ public class Main {
 //                        checkCustomers();
                             break;
             case 9:
-//                        checkExpenses();
+                shopDao.checkExpenses();
                 break;
             case 10:
                 System.out.println("Thanks");
@@ -57,7 +60,7 @@ public class Main {
                 System.out.println("Wrong Choice");
         }
     }
-    public  static void startProject(){
+    public  static void startProject() throws SQLException {
 
         ShopUseCase shopU = new ShopUseCase();
 
@@ -85,13 +88,13 @@ public class Main {
                 System.out.println("Wrong Choice!! ");
         }
     }
-    public static void shopAuthentication(){
+    public static void shopAuthentication() throws SQLException {
         ShopUseCase su = new ShopUseCase();
         if(su.LogInStaff()){
             shopMain();
         }
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         startProject();
     }
     public static void showSweets(){
