@@ -31,7 +31,6 @@ public ShopBean logInStaff (int id, String password) throws SQLException {
     }
     return result;
 }
-
 public void addSweets() throws SQLException {
     String query = "insert into sweets values(?,?,?,?)";
     PreparedStatement preparedStatement = this.connection.prepareStatement(query);
@@ -70,7 +69,6 @@ public void addSweets() throws SQLException {
 
 
 }
-
 public void checkExpenses() throws  SQLException{
 
     String query = "select * from expenses";
@@ -80,7 +78,6 @@ public void checkExpenses() throws  SQLException{
         System.out.println(resultSet.getInt("expense_id") +" "+resultSet.getInt("sweet_id")  + " " + resultSet.getString("sweet_name") + " " + resultSet.getInt("sweet_quantity") + " " + resultSet.getInt("Total"));
     }
     }
-
 public void updateSweets() throws  SQLException{
     System.out.println("Updating sweets' data");
     System.out.println("Enter the sweet id: ");
@@ -186,7 +183,6 @@ public void addCustomer() throws SQLException {
         System.out.println("Not able to insert customer data ");
     }
 }
-
 public void checkCustomers() throws SQLException{
     String query = "Select * from customer";
     PreparedStatement preparedStatement = this.connection.prepareStatement(query);
@@ -196,5 +192,6 @@ public void checkCustomers() throws SQLException{
 
     }
     }
+
 
 }

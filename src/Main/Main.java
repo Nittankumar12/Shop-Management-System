@@ -1,5 +1,6 @@
 package Main;
 
+import dao.CustomerDao;
 import dao.ShopDao;
 import usecase.ShopUseCase;
 
@@ -9,7 +10,37 @@ import java.util.*;
 public class Main {
 
     static Scanner scn = new Scanner(System.in);
-    public static void customerMain(){
+    public static void customerMain() throws SQLException {
+        System.out.println("Please select from the following: ");
+        System.out.println("1.Check Sweets and their price: " +
+                "\n2.Register new Customer" +
+                "\n3.Check my spendings" +
+                "\n4.Place an order" +
+                "\n5.Check my order" +
+                "\n0.Exit");
+        int ch = scn.nextInt();
+        CustomerDao cDao = new CustomerDao();
+        switch(ch){
+            case 1:
+                cDao.checkSweetsPrice();
+                customerMain();
+            case 2:
+                cDao.registerCustomer();
+                customerMain();
+            case 3:
+                cDao.checkSpendings();
+                customerMain();
+            case 4:
+                cDao.placeOrder();
+                customerMain();
+            case 5:
+                cDao.checkOrder();
+                customerMain();
+            case 0:
+                System.exit(0);
+            default:
+                System.out.println("Enter a valid choice");
+        }
 
     }
     public static void shopMain() throws SQLException {
@@ -97,9 +128,5 @@ public class Main {
     }
     public static void main(String[] args) throws SQLException {
         startProject();
-    }
-    public static void showSweets(){
-        String query = "Select * from sweets";
-
     }
 }
