@@ -31,7 +31,6 @@ public ShopBean logInStaff (int id, String password) throws SQLException {
     }
     return result;
 }
-
 public void addSweets() throws SQLException {
     String query = "insert into sweets values(?,?,?,?)";
     PreparedStatement preparedStatement = this.connection.prepareStatement(query);
@@ -70,7 +69,6 @@ public void addSweets() throws SQLException {
 
 
 }
-
 public void checkExpenses() throws  SQLException{
 
     String query = "select * from expenses";
@@ -80,7 +78,6 @@ public void checkExpenses() throws  SQLException{
         System.out.println(resultSet.getInt("expense_id") +" "+resultSet.getInt("sweet_id")  + " " + resultSet.getString("sweet_name") + " " + resultSet.getInt("sweet_quantity") + " " + resultSet.getInt("Total"));
     }
     }
-
 public void updateSweets() throws  SQLException{
     System.out.println("Updating sweets' data");
     System.out.println("Enter the sweet id: ");
@@ -186,7 +183,6 @@ public void addCustomer() throws SQLException {
         System.out.println("Not able to insert customer data ");
     }
 }
-
 public void checkCustomers() throws SQLException{
     String query = "Select * from customer";
     PreparedStatement preparedStatement = this.connection.prepareStatement(query);
@@ -196,5 +192,38 @@ public void checkCustomers() throws SQLException{
 
     }
     }
+    public void checkOrders() throws  SQLException {
+        String query = "Select order_id,c_id,c_name,sweet_name,sweet_quantity,amount,order_date from orders";
+        PreparedStatement preparedStatement = this.connection.prepareStatement(query);
+//        preparedStatement.setInt(1,cId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()){
+            System.out.println("The orders placed are: ");
+            System.out.println(resultSet.getInt("order_id") + " " +
+                    resultSet.getInt("c_id") + " " +
+                    resultSet.getString("c_name") + " " + resultSet.getString("sweet_name") + " " + resultSet.getInt("sweet_quantity") + " " + resultSet.getInt("amount") + " " + resultSet.getTimestamp("order_date"));
+        }
+    }
+    public void checkProfit() throws SQLException{
+        int sum = 0;
+        String sql = "SELECT SUM(amount) AS total FROM orders";
+
+        PreparedStatement statement = this.connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                sum = resultSet.getInt("total");
+        }
+            String sql2 = "select sum(Total) as exp from expenses";
+            int exp = 0;
+            PreparedStatement preparedStatement = this.connection.prepareStatement(sql2);
+            ResultSet rs = preparedStatement.executeQuery();
+        if (rs.next()) {
+            exp = rs.getInt("exp");
+        }
+        System.out.println("The total order value is: " + sum + " and the total expenses are: " + exp);
+        System.out.println("So, the profit made till now is: " + (sum-exp));
+
+    }
+
 
 }

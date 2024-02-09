@@ -1,6 +1,5 @@
 package model;
 
-import org.w3c.dom.ls.LSOutput;
 
 public class CustomerBean {
     public int cust_id;
