@@ -14,7 +14,7 @@ public class Main {
         System.out.println("Please select from the following: ");
         System.out.println("1.Check Sweets and their price: " +
                 "\n2.Register new Customer" +
-                "\n3.Check my spendings" +
+                "\n3.Check my id and spendings" +
                 "\n4.Place an order" +
                 "\n5.Check my order" +
                 "\n0.Exit");
@@ -67,10 +67,10 @@ public class Main {
                 shopDao.checkSweets();
                 break;
             case 4:
-//                        checkProfit();
+                shopDao.checkProfit();
                 break;
             case 5:
-//                        checkOrders();
+                shopDao.checkOrders();
                 break;
             case 6:
                 shopDao.addExpenses();
@@ -126,6 +126,7 @@ public class Main {
             shopMain();
         }
     }
+
     public static void main(String[] args) throws SQLException {
         startProject();
     }

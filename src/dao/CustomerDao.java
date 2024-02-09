@@ -56,10 +56,10 @@ public class CustomerDao {
 
     }
     public void placeOrder() throws SQLException {
-        System.out.println("Enter id: ");
-        int id = scn.nextInt();
-        String name = getCustomerById(id);
-        if(name == ""){
+        System.out.println("Enter your name: ");
+        String name = scn.next();
+        int id = getCustomerByName(name);
+        if(id == -1){
             System.out.println("No customer exists for this id, please exit and register yourself first!!");
             System.exit(0);
         }
@@ -73,7 +73,7 @@ public class CustomerDao {
         }
         else{
             int aSweet = checkAvailabilty(sweet_id);
-            System.out.println("Avalable quantity of " + sweet_name + " is: " + aSweet);
+            System.out.println("Available quantity of " + sweet_name + " is: " + aSweet);
             if(aSweet >= quantity){
                 order(id,name,sweet_id,sweet_name,quantity);
             }else{
@@ -81,8 +81,24 @@ public class CustomerDao {
             }
         }
     }
-    public void checkOrder(){
-
+    public void checkOrder() throws SQLException {
+        System.out.println("Enter your name: ");
+        String name = scn.next();
+        int cId = getCustomerByName(name);
+        if(cId == -1){
+            System.out.println("you are not an existing customer, register first....");
+            System.exit(0);
+        }
+        String query = "Select order_id,c_id,c_name,sweet_name,sweet_quantity,amount,order_date from orders where c_id = ?";
+        PreparedStatement preparedStatement = this.connection.prepareStatement(query);
+        preparedStatement.setInt(1,cId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()){
+            System.out.println("The orders you have placed are: ");
+            System.out.println(resultSet.getInt("order_id") + " " +
+                    resultSet.getInt("c_id") + " " +
+                    resultSet.getString("c_name") + " " + resultSet.getString("sweet_name") + " " + resultSet.getInt("sweet_quantity") + " " + resultSet.getInt("amount") + " " + resultSet.getTimestamp("order_date"));
+        }
     }
     public int getSweetByName(String name) throws SQLException {
         String query = "select s_id from sweets where s_name = ?";
@@ -96,7 +112,6 @@ public class CustomerDao {
         }
         return -1;
     }
-
     public int checkAvailabilty(int sid) throws SQLException {
       String query = "select s_quantity from sweets where s_id = ?";
       PreparedStatement preparedStatement = this.connection.prepareStatement(query);
@@ -115,14 +130,47 @@ public class CustomerDao {
 //        preparedStatement.setInt(3,sweet_id);
         preparedStatement.setString(3,sweet_name);
         preparedStatement.setInt(4,s_quantity);
+        int am = s_quantity * getSweetCostById(sweet_id);
+        preparedStatement.setInt(5,am);
         int isWorked = preparedStatement.executeUpdate();
         if(isWorked > 0){
             System.out.println("Order Placed Successfully");
+//            int am = s_quantity * getSweetCostById(sweet_id);
+            updateCustomerData(cid,am);
+            updateSweets(sweet_id,s_quantity);
         }else{
             System.out.println("Unable to place the order");
         }
 
     }
+    public void updateSweets(int sid, int quantityToReduce) throws SQLException {
+        String query = "UPDATE sweets SET s_quantity = s_quantity - ? WHERE s_id = ?";
+        PreparedStatement preparedStatement = this.connection.prepareStatement(query);
+        preparedStatement.setInt(1,quantityToReduce);
+        preparedStatement.setInt(2,sid);
+        int rowsAffected = preparedStatement.executeUpdate();
+        if(rowsAffected > 0){
+            System.out.println("Sweets quantity Updated");
+        }else{
+            System.out.println("Unable to update sweet quantity");
+        }
+
+    }
+    public void updateCustomerData(int cid, int amount) throws SQLException {
+        String sql = "UPDATE customer SET c_spend = c_spend + ? WHERE c_id = ?";
+
+        PreparedStatement statement = this.connection.prepareStatement(sql);
+            statement.setInt(1, amount);
+            statement.setInt(2, cid);
+
+            int rowsUpdated = statement.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("Customer spendings updated successfully.");
+            } else {
+                System.out.println("No customer found with the provided ID.");
+            }
+        }
     public String getCustomerById(int id) throws SQLException {
         String query = "select c_name from customer where c_id = ?";
         PreparedStatement preparedStatement = this.connection.prepareStatement(query);
@@ -132,6 +180,27 @@ public class CustomerDao {
             return resultSet.getString("c_name");
         }
         return "";
+
+    }
+    public int getSweetCostById(int sid) throws SQLException {
+        String query = "select s_cost from sweets where s_id = ?";
+        PreparedStatement preparedStatement = this.connection.prepareStatement(query);
+        preparedStatement.setInt(1,sid);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()){
+            return resultSet.getInt("s_cost");
+        }
+        return -1;
+    }
+    public int getCustomerByName(String name) throws SQLException {
+        String query = "select c_id from customer where c_name = ?";
+        PreparedStatement preparedStatement = this.connection.prepareStatement(query);
+        preparedStatement.setString(1,name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()){
+            return resultSet.getInt("c_id");
+        }
+        return -1;
 
     }
 }
