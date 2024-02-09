@@ -40,5 +40,4 @@ ALTER TABLE orders
 ADD order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 INSERT INTO shop VALUES(1,"NITTAN","DELHI","+9142135","nittan");
 
-select * from sweets;
 
